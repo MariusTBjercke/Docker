@@ -22,9 +22,9 @@ services:
         - db:/var/lib/mysql
       environment:
         MYSQL_ROOT_PASSWORD: "root"
-        MYSQL_DATABASE: "marius"
-        MYSQL_USER: "marius"
-        MYSQL_PASSWORD: "marius"
+        MYSQL_DATABASE: "blizzlikecms"
+        MYSQL_USER: "blizzlikecms"
+        MYSQL_PASSWORD: "blizzlikecms"
       ports:
         - "3306:3306"
   phpmyadmin:
