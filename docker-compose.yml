@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: php81
+    depends_on:
+      - db
+    volumes:
+      - ./html:/var/www/html/
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "80:80"
+  db:
+      container_name: mysql8
+      image: mysql:8.0
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      volumes:
+        - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+        - db:/var/lib/mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: "root"
+        MYSQL_DATABASE: "marius"
+        MYSQL_USER: "marius"
+        MYSQL_PASSWORD: "marius"
+      ports:
+        - "3306:3306"
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin:latest
+      restart: always
+      ports:
+        - "8080:80"
+      environment:
+        PMA_USER: "root"
+        PMA_PASSWORD: "root"
+volumes:
+  db:
