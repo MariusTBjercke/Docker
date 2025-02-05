@@ -1,39 +1,36 @@
-version: '3.8'
 services:
-  web:
+  webserver:
+    container_name: webserver
     build:
-      context: ./php
+      context: ./docker/php
       dockerfile: Dockerfile
-    container_name: php81
     depends_on:
-      - db
+      - mysql
     volumes:
       - ./html:/var/www/html/
       - ./php/php.ini:/usr/local/etc/php/php.ini
     ports:
       - "80:80"
-  db:
-      container_name: mysql8
+  mysql:
+      container_name: mysql
       image: mysql:8.0
-      command: --default-authentication-plugin=mysql_native_password
       restart: always
       volumes:
-        - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+        - ./sql:/docker-entrypoint-initdb.d
         - db:/var/lib/mysql
       environment:
         MYSQL_ROOT_PASSWORD: "root"
-        MYSQL_DATABASE: "blizzlikecms"
-        MYSQL_USER: "blizzlikecms"
-        MYSQL_PASSWORD: "blizzlikecms"
+        MYSQL_DATABASE: "example"
+        MYSQL_USER: "user"
+        MYSQL_PASSWORD: "user"
       ports:
         - "3306:3306"
   phpmyadmin:
       image: phpmyadmin/phpmyadmin:latest
       restart: always
+      environment:
+        PMA_HOST: mysql
       ports:
         - "8080:80"
-      environment:
-        PMA_USER: "root"
-        PMA_PASSWORD: "root"
 volumes:
   db:
